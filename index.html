@@ -15,7 +15,7 @@
 
         <div class="step" id="step1">
             <h2>Case Information</h2>
-            <label for="receiptNumber">Receipt #:<p>Optional</p></label>
+            <label for="receiptNumber">Receipt #:</label>
             <input type="text" id="receiptNumber" name="receiptNumber" class="half-width"><br>
 
             <label>Warrany for:</label>
@@ -32,8 +32,8 @@
                     Has the customer been<br>given a replacement item?
                 </label>
                 <div class="radio-group">
-                    <label><input type="checkbox" id="replacedYes" name="replacementStatus" value="Yes">Yes</label>
-                    <label><input type="checkbox" id="replacedNo" name="replacementStatus" value="No">No</label>
+                    <label><input type="checkbox" id="replacedYes" name="replacementStatus" value="Replaced" required>Yes</label>
+                    <label><input type="checkbox" id="replacedNo" name="replacementStatus" value="Not Replaced" required>No</label>
                 </div>
             </div>
 
@@ -107,7 +107,8 @@
 
             <label for="uploadFiles">Upload Photos / Videos:</label>
             <div id="fileDropZone">
-                <input type="file" id="uploadFiles" name="uploadFiles" multiple style="opacity:0;" required>
+                <input type="file" id="uploadFiles" name="uploadFiles" multiple style="opacity:0;">
+                <p>SEND FILES TO BLAINE ON WHATSAPP OR UPLOAD HERE</p>
                 <p>Drag and drop files here, or <a href="#" id="fileSelect">choose files</a></p>
                 <p>Max 5 files, Total size limit: 100MB</p>
             </div>
@@ -115,7 +116,7 @@
             <label for="caseDescription">Describe the case:</label>
             <textarea id="caseDescription" name="caseDescription" rows="5" cols="50" required></textarea><br>
         </div>
-        <p id="submitNotice">*** Larger files take time to upload. ***</p>
+        <p id="submitNotice">***Click ONCE and Wait a few seconds***</p>
         <div class="loading-spinner"></div>
         <button type="submit">Request Warranty</button>
     </form>
