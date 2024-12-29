@@ -66,7 +66,7 @@ sizeCheckboxes.forEach(checkbox => {
 
 // change form requirements based on brand
 brandSelect.addEventListener('change', () => {
-    if (brandSelect.value === 'Klim') {
+    if (brandSelect.value === 'KLIM') {
         poNumberField.classList.remove('hidden');
         otherBrandField.classList.add('hidden');
         dateReturnedField.classList.add('hidden');
@@ -76,12 +76,12 @@ brandSelect.addEventListener('change', () => {
         otherBrandField.classList.remove('hidden');
         dateReturnedField.classList.add('hidden');
         serialNumberField.classList.add('hidden');
-    } else if (brandSelect.value === 'Alpinestars') {
+    } else if (brandSelect.value === 'ALPINESTARS') {
         poNumberField.classList.add('hidden');
         otherBrandField.classList.add('hidden');
         dateReturnedField.classList.remove('hidden');
         serialNumberField.classList.add('hidden');
-    } else if (brandSelect.value === 'Akrapovic') {
+    } else if (brandSelect.value === 'AKRAPOVIC') {
         poNumberField.classList.add('hidden');
         otherBrandField.classList.add('hidden');
         dateReturnedField.classList.add('hidden');
