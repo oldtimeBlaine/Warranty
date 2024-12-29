@@ -1,29 +1,6 @@
 const recipientCheckboxes = document.querySelectorAll('input[name="recipient"]');
 const sizeCheckboxes = document.querySelectorAll('input[name="sizeOption"]');
 const replacementCheckboxes = document.querySelectorAll('input[name="replacementStatus"]');
-//added for dynamic required
-replacementCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', () => {
-        if (checkbox.checked) {
-            // Make only the selected checkbox required
-            replacementCheckboxes.forEach(c => c.required = false);
-            checkbox.required = true;
-        } else {
-            // If no checkboxes are checked, reset the requirement
-            const anyChecked = Array.from(replacementCheckboxes).some(c => c.checked);
-            replacementCheckboxes.forEach(c => c.required = !anyChecked);
-        }
-    });
-});
-
-// Initialize to ensure one is required if none are checked
-const ensureReplacementRequired = () => {
-    const anyChecked = Array.from(replacementCheckboxes).some(c => c.checked);
-    replacementCheckboxes.forEach(c => c.required = !anyChecked);
-};
-
-// Call the initialization function on page load
-ensureReplacementRequired();
 const customerNameField = document.getElementById('customerNameField');
 const brandSelect = document.getElementById('brand');
 const poNumberField = document.getElementById('poNumberField');
@@ -57,7 +34,7 @@ function makeCheckboxesLikeRadios(checkboxes) {
 
 makeCheckboxesLikeRadios(recipientCheckboxes);
 makeCheckboxesLikeRadios(sizeCheckboxes);
-makeCheckboxesLikeRadios(Checkboxes);
+makeCheckboxesLikeRadios(replacementCheckboxes);
 //end of checkbox like radio
 
 // hide and view toggles
@@ -68,6 +45,7 @@ recipientCheckboxes.forEach(checkbox => {
         } else {
             customerNameField.classList.add('hidden');
         }
+        updateRequiredFields(customerNameField);
     });
 });
 
@@ -83,6 +61,8 @@ sizeCheckboxes.forEach(checkbox => {
             sizeSMLField.classList.add('hidden');
             sizeNumbersField.classList.add('hidden');
         }
+        updateRequiredFields(sizeSMLField);
+        updateRequiredFields(sizeNumbersField);
     });
 });
 //end of hide and view toggles
@@ -115,10 +95,12 @@ brandSelect.addEventListener('change', () => {
         dateReturnedField.classList.add('hidden');
         serialNumberField.classList.add('hidden');
     }
+    updateRequiredFields(poNumberField);
+    updateRequiredFields(otherBrandField);
+    updateRequiredFields(dateReturnedField);
+    updateRequiredFields(serialNumberField);
 });
 //end of brand-based switches
-
-
 
 // array of salesteam
 const requestedByArray = ["Blaine", "Sergio", "Peter", "Emile", "Georgio", "Tim","Tina", "Mohammed", "Khalid", "Wissam","Joe"];
@@ -224,105 +206,91 @@ function removeFile(fileToRemove, listItem) {
     fileInput.files = dataTransfer.files;
 
     // Remove the list item from the DOM
-fileList.removeChild(listItem);
+    fileList.removeChild(listItem);
 }
 
 let scrollPosition;
 
 fileSelect.addEventListener('click', (e) => {
-e.preventDefault(); // Prevent default behavior
-scrollPosition = window.scrollY; // Save current scroll position
-fileInput.click(); // Trigger file input click
+    e.preventDefault(); // Prevent default behavior
+    scrollPosition = window.scrollY; // Save current scroll position
+    fileInput.click(); // Trigger file input click
 });
 
 fileInput.addEventListener('click', () => {
-// This ensures the scroll position is saved even if the user clicks directly on the file input
-scrollPosition = window.scrollY;
+    // This ensures the scroll position is saved even if the user clicks directly on the file input
+    scrollPosition = window.scrollY;
 });
 
 // When the file dialog is closed, restore the scroll position
 document.addEventListener('focus', function(e) {
-if (e.target === fileInput && scrollPosition !== undefined) {
-    window.scrollTo(0, scrollPosition);
-    scrollPosition = undefined; // Reset scrollPosition
-}
+    if (e.target === fileInput && scrollPosition !== undefined) {
+        window.scrollTo(0, scrollPosition);
+        scrollPosition = undefined; // Reset scrollPosition
+    }
 }, true);
 
 // Function to manage required attributes based on visibility
 function updateRequiredFields(element) {
-if (element.classList.contains('hidden')) {
-    Array.from(element.querySelectorAll('input, select, textarea')).forEach(field => {
-        if (!['receiptNumber', 'color', 'sizeOptionSML', 'sizeOptionNumbers'].includes(field.id)) {
-            field.removeAttribute('required');
-        }
-    });
-} else {
-    Array.from(element.querySelectorAll('input, select, textarea')).forEach(field => {
-        if (!['receiptNumber', 'color', 'sizeOptionSML', 'sizeOptionNumbers'].includes(field.id) && 
-            !field.name.includes('recipient')) { // exclude switches
-            field.setAttribute('required', '');
-        }
-    });
-}
+    if (element.classList.contains('hidden')) {
+        Array.from(element.querySelectorAll('input, select, textarea')).forEach(field => {
+            if (!['receiptNumber', 'color', 'sizeOptionSML', 'sizeOptionNumbers'].includes(field.id)) {
+                field.removeAttribute('required');
+            }
+        });
+    } else {
+        Array.from(element.querySelectorAll('input, select, textarea')).forEach(field => {
+            if (!['receiptNumber', 'color', 'sizeOptionSML', 'sizeOptionNumbers'].includes(field.id) && 
+                !field.name.includes('recipient')) { // exclude switches
+                field.setAttribute('required', '');
+            }
+        });
+    }
 }
 
 // Update required fields for all initially hidden elements
 document.querySelectorAll('.hidden').forEach(e => updateRequiredFields(e));
 
- Manage required fields for dynamic elements
-recipientCheckboxes.forEach(checkbox => {
-checkbox.addEventListener('change', () => {
-    if (document.getElementById('customer').checked) {
-        customerNameField.classList.remove('hidden');
-        updateRequiredFields(customerNameField);
-    } else {
-        customerNameField.classList.add('hidden');
-        updateRequiredFields(customerNameField);
-    }
-});
-});
-
-
 document.getElementById('dynamicForm').addEventListener('submit', async function(e) {
-console.log('Form submission started22')
-e.preventDefault();
-const submitButton = document.querySelector('button[type="submit"]');
-const loadingSpinner = document.querySelector('.loading-spinner');
+    console.log('Form submission started')
+    e.preventDefault();
+    const submitButton = document.querySelector('button[type="submit"]');
+    const loadingSpinner = document.querySelector('.loading-spinner');
 
-// Show loading spinner and disable submit button
-submitButton.classList.add('submit-loading');
-loadingSpinner.style.display = 'block';
+    // Show loading spinner and disable submit button
+    submitButton.classList.add('submit-loading');
+    loadingSpinner.style.display = 'block';
 
-const formData = new FormData(this);
+    const formData = new FormData(this);
 
-// Convert files to base64
-const files = formData.getAll('uploadFiles');
-const base64Files = await Promise.all(files.map(async file => {
-const buffer = await file.arrayBuffer();
-const uint8Array = new Uint8Array(buffer);
-const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
-return base64String;
-}));
+    // Convert files to base64
+    const files = formData.getAll('uploadFiles');
+    const base64Files = await Promise.all(files.map(async file => {
+        const buffer = await file.arrayBuffer();
+        const uint8Array = new Uint8Array(buffer);
+        const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
+        return base64String;
+    }));
 
-// Add base64 strings to formData
-base64Files.forEach(base64 => formData.append('uploadFiles', base64));
+    // Add base64 strings to formData
+    base64Files.forEach(base64 => formData.append('uploadFiles', base64));
 
-fetch(this.action, {
-method: 'POST',
-body: formData
-})
-.then(response => response.json())
-.then(data => {
-console.log('Success:', data);
-alert('Form submitted successfully!');
-})
-.catch((error) => {
-console.error('Error:', error);
-alert('An error occurred while submitting the form.');
-})
-.finally(() => {
-// Hide loading spinner and re-enable submit button
-submitButton.classList.remove('submit-loading');
-loadingSpinner.style.display = 'none';
-});
+    fetch(this.action, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Form submitted successfully!');
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('An error occurred while submitting the form.');
+    })
+    .finally(() => {
+        // Hide loading spinner and re-enable submit button
+        submitButton.classList.remove('submit-loading');
+        loadingSpinner.style.display = 'none';
+    });
 });
