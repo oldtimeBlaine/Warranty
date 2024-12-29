@@ -247,17 +247,17 @@ if (element.classList.contains('hidden')) {
 document.querySelectorAll('.hidden').forEach(e => updateRequiredFields(e));
 
 // Manage required fields for dynamic elements
-recipientCheckboxes.forEach(checkbox => {
-checkbox.addEventListener('change', () => {
-    if (document.getElementById('customer').checked) {
-        customerNameField.classList.remove('hidden');
-        updateRequiredFields(customerNameField);
-    } else {
-        customerNameField.classList.add('hidden');
-        updateRequiredFields(customerNameField);
-    }
-});
-});
+//recipientCheckboxes.forEach(checkbox => {
+//checkbox.addEventListener('change', () => {
+//    if (document.getElementById('customer').checked) {
+//        customerNameField.classList.remove('hidden');
+//        updateRequiredFields(customerNameField);
+//    } else {
+//        customerNameField.classList.add('hidden');
+//        updateRequiredFields(customerNameField);
+//    }
+//});
+//});
 
 
 document.getElementById('dynamicForm').addEventListener('submit', async function(e) {
