@@ -32,8 +32,8 @@
                     Has the customer been<br>given a replacement item?
                 </label>
                 <div class="radio-group">
-                    <label><input type="checkbox" id="replacedYes" name="replacementStatus" value="Replaced" required>Yes</label>
-                    <label><input type="checkbox" id="replacedNo" name="replacementStatus" value="Not Replaced" required>No</label>
+                    <label><input type="checkbox" id="replacedYes" name="replacementStatus" value="Yes" required>Yes</label>
+                    <label><input type="checkbox" id="replacedNo" name="replacementStatus" value="No" required>No</label>
                 </div>
             </div>
 
@@ -63,7 +63,7 @@
                 <input type="text" id="partNumber" name="partNumber" required><br>
 
                 <div id="serialNumberField" class="hidden">
-                    <label for="serialNumber">Serial Number:</label>
+                    <label for="serialNumber">Serial Number:<p>You can find the Serial Number on the Box or the Specific Part as S/N.</p></label>
                     <input type="text" id="serialNumber" name="serialNumber" required>
                 </div>
 
@@ -89,7 +89,7 @@
                 <input type="text" id="color" name="color" placeholder="Color OR color code."><br>
 
                 <div id="poNumberField" class="hidden">
-                    <label for="poNumber">PO Number:</label>
+                    <label for="poNumber">PO Number:<p>PO Number is found on the tag.</p></label>
                     <input type="text" id="poNumber" name="poNumber" required><br>
                 </div>
             </div>
@@ -107,8 +107,7 @@
 
             <label for="uploadFiles">Upload Photos / Videos:</label>
             <div id="fileDropZone">
-                <input type="file" id="uploadFiles" name="uploadFiles" multiple style="opacity:0;">
-                <p>SEND FILES TO BLAINE ON WHATSAPP OR UPLOAD HERE</p>
+                <input type="file" id="uploadFiles" name="uploadFiles" multiple style="opacity:0;" required>
                 <p>Drag and drop files here, or <a href="#" id="fileSelect">choose files</a></p>
                 <p>Max 5 files, Total size limit: 100MB</p>
             </div>

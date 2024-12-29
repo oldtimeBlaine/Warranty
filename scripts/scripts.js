@@ -13,10 +13,13 @@ const datePurchased = document.getElementById('datePurchased');
 const dateReturnedField = document.getElementById('dateReturnedField');
 const partNumberField = document.getElementById('partNumber');
 const serialNumberField = document.getElementById('serialNumberField');
+const serialNumber = document.getElementById('serialNumber');
 const fileDropZone = document.getElementById('fileDropZone');
 const fileSelect = document.getElementById('fileSelect');
 const fileInput = document.getElementById('uploadFiles');
 const fileList = document.getElementById('fileList');
+const replacedYes = document.getElementById('replacedYes');
+const replacedNo = document.getElementById('replacedNo');
 
 // checkbox behave like radio
 function makeCheckboxesLikeRadios(checkboxes) {
@@ -44,6 +47,8 @@ recipientCheckboxes.forEach(checkbox => {
             customerNameField.classList.remove('hidden');
         } else {
             customerNameField.classList.add('hidden');
+            replacedNo.checked = false;
+            replacedYes.checked = false;
         }
     });
 });
@@ -81,17 +86,24 @@ brandSelect.addEventListener('change', () => {
         otherBrandField.classList.add('hidden');
         dateReturnedField.classList.remove('hidden');
         serialNumberField.classList.add('hidden');
-    } else if (brandSelect.value === 'LEATT') {
-        poNumberField.classList.add('hidden');
-        otherBrandField.classList.add('hidden');
-        dateReturnedField.classList.remove('hidden');
-        serialNumberField.classList.add('hidden');
     } else if (brandSelect.value === 'AKRAPOVIC') {
         poNumberField.classList.add('hidden');
         otherBrandField.classList.add('hidden');
         dateReturnedField.classList.add('hidden');
         serialNumberField.classList.remove('hidden');
-    } else {
+        serialNumber.setAttribute('required','');
+    } else if (brandSelect.value === 'QUAD LOCK') {
+        poNumberField.classList.add('hidden');
+        otherBrandField.classList.add('hidden');
+        dateReturnedField.classList.remove('hidden');
+        serialNumberField.classList.add('hidden');
+    } else if (brandSelect.value === 'LEATT') {
+        poNumberField.classList.add('hidden');
+        otherBrandField.classList.add('hidden');
+        dateReturnedField.classList.remove('hidden');
+        serialNumberField.classList.add('hidden');
+    }
+    else {
         poNumberField.classList.add('hidden');
         otherBrandField.classList.add('hidden');
         dateReturnedField.classList.add('hidden');
@@ -230,35 +242,42 @@ if (e.target === fileInput && scrollPosition !== undefined) {
 }
 }, true);
 
-// Function to manage required attributes based on visibility
-function updateRequiredFields(element) {
-    if (element.classList.contains('hidden')) {
-        Array.from(element.querySelectorAll('input, select, textarea')).forEach(field => {
-            if (!['receiptNumber', 'color', 'sizeOptionSML', 'sizeOptionNumbers'].includes(field.id)) {
-                field.removeAttribute('required');
-            }
-        });
+// Function to handle the required attribute dynamically
+function toggleRequired() {
+    if (replacedYes.checked) {
+        replacedYes.setAttribute('required', '');
+        replacedNo.removeAttribute('required');
+    } else if (replacedNo.checked) {
+        replacedNo.setAttribute('required', '');
+        replacedYes.removeAttribute('required');
     } else {
-        Array.from(element.querySelectorAll('input, select, textarea')).forEach(field => {
-            if (!['receiptNumber', 'color', 'sizeOptionSML', 'sizeOptionNumbers'].includes(field.id) && 
-                !field.name.includes('recipient')) { // exclude switches
-                if (field.name === 'replacementStatus') {
-                    // Handle the "Yes" or "No" logic for replacementStatus
-                    const replacementChecked = Array.from(document.querySelectorAll('input[name="replacementStatus"]'))
-                        .some(input => input.checked);
-                    if (replacementChecked) {
-                        field.removeAttribute('required');
-                    } else if (field.checked) {
-                        field.setAttribute('required', '');
-                    }
-                } else {
-                    field.setAttribute('required', '');
-                }
-            }
-        });
+        // Neither checkbox is checked, required both
+        replacedYes.setAttribute('required');
+        replacedNo.setAttribute('required');
     }
 }
 
+
+// Function to manage required attributes based on visibility
+function updateRequiredFields(element) {
+if (element.classList.contains('hidden')) {
+    Array.from(element.querySelectorAll('input, select, textarea')).forEach(field => {
+        if (!['receiptNumber', 'color', 'sizeOptionSML', 'sizeOptionNumbers'].includes(field.id)) {
+            field.removeAttribute('required');
+        }
+    });
+} else {
+    Array.from(element.querySelectorAll('input, select, textarea')).forEach(field => {
+        if (!['receiptNumber', 'color', 'sizeOptionSML', 'sizeOptionNumbers'].includes(field.id) && 
+            !field.name.includes('replacementStatus'))
+            replacedYes.addEventListener('change', toggleRequired);
+            replacedNo.addEventListener('change', toggleRequired);
+             { // exclude switches
+            field.setAttribute('required', '');
+        }
+    });
+}
+}
 
 // Update required fields for all initially hidden elements
 document.querySelectorAll('.hidden').forEach(e => updateRequiredFields(e));
@@ -277,6 +296,7 @@ checkbox.addEventListener('change', () => {
 });
 
 
+
 document.getElementById('dynamicForm').addEventListener('submit', async function(e) {
 console.log('Form submission started22')
 e.preventDefault();
@@ -289,17 +309,14 @@ loadingSpinner.style.display = 'block';
 
 const formData = new FormData(this);
 
-// Convert files to base64
 const files = formData.getAll('uploadFiles');
-const base64Files = await Promise.all(files.map(async file => {
-const buffer = await file.arrayBuffer();
-const uint8Array = new Uint8Array(buffer);
-const base64String = btoa(String.fromCharCode.apply(null, uint8Array));
-return base64String;
-}));
 
-// Add base64 strings to formData
-base64Files.forEach(base64 => formData.append('uploadFiles', base64));
+// If needed, ensure the files are still usable without conversion
+files.forEach(file => {
+    // Add each file back to formData directly
+    formData.append('uploadFiles', file);
+});
+
 
 fetch(this.action, {
 method: 'POST',
