@@ -108,7 +108,7 @@ requestedByArray.forEach(name => {
 });
 
 // array of brands
-const brandArray = ["Klim", "Alpinestars", "Akrapovic","Other"];
+const brandArray = ["AKRAPOVIC", "ALPINESTARS", "ARROW", "BAJA DESIGNS", "DAYTONA", "JOHN DOE", "KLIM", "KNOX", "LEATT", "QUAD LOCK", "RUKKA", "SP CONNECT", "WRS", "WUNDERLICH", "OTHER"];
 brandArray.forEach(brand => {
     const option = document.createElement('option');
     option.value = brand;
