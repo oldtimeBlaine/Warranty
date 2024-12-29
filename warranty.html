@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oldtimer Warranty Request</title>
+    <link rel="stylesheet" href="styles/styles.css">
+    <script src="scripts/scripts.js" defer></script>
+</head>
+<body>
+    <div class="logo">
+        <img src="images/Oldtimer-Logo.png" alt="Oldtimer Logo">
+    </div>
+    <form id="dynamicForm" action="https://script.google.com/macros/s/AKfycbzAjXEIpQ7EJ6L5uqzinblx7dqSPYe93skvXX2-16uDBkd9g3T5JHYpjkAZmfLQZ9Fc/exec" method="POST" enctype="multipart/form-data">
+
+        <div class="step" id="step1">
+            <h2>Case Information</h2>
+            <label for="receiptNumber">Receipt #:</label>
+            <input type="text" id="receiptNumber" name="receiptNumber" class="half-width"><br>
+
+            <label>Warrany for:</label>
+            <div class="radio-group">
+                <label><input type="checkbox" id="oldtimer" name="recipient" value="Oldtimer">Oldtimer</label>
+                <label><input type="checkbox" id="customer" name="recipient" value="Customer">Customer</label>
+            </div>
+
+            <div id="customerNameField" class="hidden">
+                <label for="customerName">Customer Name:</label>
+                <input type="text" id="customerName" name="customerName" class="half-width" required><br>
+
+                <label for="replacementItem">
+                    Has the customer been<br>given a replacement item?
+                </label>
+                <div class="radio-group">
+                    <label><input type="checkbox" id="replacedYes" name="replacementStatus" value="Replaced" required>Yes</label>
+                    <label><input type="checkbox" id="replacedNo" name="replacementStatus" value="Not Replaced" required>No</label>
+                </div>
+            </div>
+
+            <label for="requestedBy">Requested By:</label>
+            <select id="requestedBy" name="requestedBy" class="half-width" required>
+                <option value="" disabled selected hidden>Salesperson Name</option>
+            </select><br>
+        </div>
+
+        <div class="step" id="step2">
+            <h2>Item Information</h2>
+            <label for="brand">Brand:</label>
+            <select id="brand" name="brand" required>
+                <option value="" hidden selected disabled>Select Brand</option>
+            </select><br>
+
+            <div id="otherBrandField" class="hidden">
+                <label for="otherBrand">Specify Brand:</label>
+                <input type="text" id="otherBrand" name="brand" placeholder="Enter Brand Name" required>
+            </div>
+
+            <div id="itemDetails">
+                <label for="itemName">Item Name:</label>
+                <input type="text" id="itemName" name="itemName" required><br>
+
+                <label for="partNumber">Part Number:</label>
+                <input type="text" id="partNumber" name="partNumber" required><br>
+
+                <div id="serialNumberField" class="hidden">
+                    <label for="serialNumber">Serial Number:</label>
+                    <input type="text" id="serialNumber" name="serialNumber" required>
+                </div>
+
+                <label for="size">Size:</label>
+                <div class="radio-group">
+                    <label><input type="checkbox" id="sizeOptionSML" name="sizeOption" value="SML">Small Medium Large</label>
+                    <label><input type="checkbox" id="sizeOptionNumbers" name="sizeOption" value="Numbers">Numbers</label>
+                </div>
+
+                <div id="sizeSMLField" class="hidden">
+                    <label for="sizeSML">Select Size:</label>
+                    <select id="sizeSML" name="size" required>
+                        <option hidden selected value="" disabled>Select Size</option>
+                    </select>
+                </div>
+
+                <div id="sizeNumbersField" class="hidden">
+                    <label for="sizeNumbers">Enter Size:</label>
+                    <input type="text" id="sizeNumbers" name="size" pattern="[0-9/\-]*" placeholder="e.g., 15 or 34/36" required>
+                </div><br>
+
+                <label for="color">Color:</label>
+                <input type="text" id="color" name="color" placeholder="Color OR color code."><br>
+
+                <div id="poNumberField" class="hidden">
+                    <label for="poNumber">PO Number:</label>
+                    <input type="text" id="poNumber" name="poNumber" required><br>
+                </div>
+            </div>
+        </div>
+
+        <div class="step" id="step3">
+            <h2>Item Issue</h2>
+            <label for="datePurchased">Date Purchased:</label>
+            <input type="date" id="datePurchased" name="datePurchased" required><br>
+
+            <div id="dateReturnedField" class="hidden">
+                <label for="dateReturned">Date Returned:</label>
+                <input type="date" id="dateReturned" name="dateReturned" required>
+            </div>
+
+            <label for="uploadFiles">Upload Photos / Videos:</label>
+            <div id="fileDropZone">
+                <input type="file" id="uploadFiles" name="uploadFiles" multiple style="opacity:0;" required>
+                <p>Drag and drop files here, or <a href="#" id="fileSelect">choose files</a></p>
+                <p>Max 5 files, Total size limit: 100MB</p>
+            </div>
+            <ul id="fileList"></ul>
+            <label for="caseDescription">Describe the case:</label>
+            <textarea id="caseDescription" name="caseDescription" rows="5" cols="50" required></textarea><br>
+        </div>
+        <p id="submitNotice">***Click ONCE and Wait a few seconds***</p>
+        <div class="loading-spinner"></div>
+        <button type="submit">Request Warranty</button>
+    </form>
+</body>
+</html>    
