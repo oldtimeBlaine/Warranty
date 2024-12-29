@@ -18,12 +18,12 @@ const fileSelect = document.getElementById('fileSelect');
 const fileInput = document.getElementById('uploadFiles');
 const fileList = document.getElementById('fileList');
 
-// checkbox behave like radio
+// Checkbox behave like radio
 function makeCheckboxesLikeRadios(checkboxes) {
     checkboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
+        checkbox.addEventListener('change', function () {
             if (this.checked) {
-                // uncheck others
+                // Uncheck others
                 checkboxes.forEach(c => {
                     if (c !== this) c.checked = false;
                 });
@@ -35,9 +35,29 @@ function makeCheckboxesLikeRadios(checkboxes) {
 makeCheckboxesLikeRadios(recipientCheckboxes);
 makeCheckboxesLikeRadios(sizeCheckboxes);
 makeCheckboxesLikeRadios(replacementCheckboxes);
-//end of checkbox like radio
 
-// hide and view toggles
+// Function to manage required attributes based on visibility
+function updateRequiredFields(element) {
+    if (element.classList.contains('hidden')) {
+        Array.from(element.querySelectorAll('input, select, textarea')).forEach(field => {
+            if (!['receiptNumber', 'color', 'sizeOptionSML', 'sizeOptionNumbers'].includes(field.id)) {
+                field.removeAttribute('required');
+            }
+        });
+    } else {
+        Array.from(element.querySelectorAll('input, select, textarea')).forEach(field => {
+            if (!['receiptNumber', 'color', 'sizeOptionSML', 'sizeOptionNumbers'].includes(field.id) &&
+                !field.name.includes('recipient')) { // Exclude switches
+                field.setAttribute('required', '');
+            }
+        });
+    }
+}
+
+// Update required fields for all initially hidden elements
+document.querySelectorAll('.hidden').forEach(e => updateRequiredFields(e));
+
+// Manage required fields dynamically for visibility toggles
 recipientCheckboxes.forEach(checkbox => {
     checkbox.addEventListener('change', () => {
         if (document.getElementById('customer').checked) {
@@ -50,7 +70,7 @@ recipientCheckboxes.forEach(checkbox => {
 });
 
 sizeCheckboxes.forEach(checkbox => {
-    checkbox.addEventListener('change', function() {
+    checkbox.addEventListener('change', function () {
         if (this.id === 'sizeOptionSML') {
             sizeSMLField.classList.remove('hidden');
             sizeNumbersField.classList.add('hidden');
@@ -65,9 +85,8 @@ sizeCheckboxes.forEach(checkbox => {
         updateRequiredFields(sizeNumbersField);
     });
 });
-//end of hide and view toggles
 
-// change form requirements based on brand
+// Update required fields dynamically for brand selection
 brandSelect.addEventListener('change', () => {
     if (brandSelect.value === 'KLIM') {
         poNumberField.classList.remove('hidden');
@@ -79,7 +98,7 @@ brandSelect.addEventListener('change', () => {
         otherBrandField.classList.remove('hidden');
         dateReturnedField.classList.add('hidden');
         serialNumberField.classList.add('hidden');
-    } else if (brandSelect.value === 'ALPINESTARS') {
+    } else if (brandSelect.value === 'ALPINESTARS' || brandSelect.value === 'LEATT') {
         poNumberField.classList.add('hidden');
         otherBrandField.classList.add('hidden');
         dateReturnedField.classList.remove('hidden');
@@ -95,24 +114,24 @@ brandSelect.addEventListener('change', () => {
         dateReturnedField.classList.add('hidden');
         serialNumberField.classList.add('hidden');
     }
+
+    // Ensure required attributes are updated
     updateRequiredFields(poNumberField);
     updateRequiredFields(otherBrandField);
     updateRequiredFields(dateReturnedField);
     updateRequiredFields(serialNumberField);
 });
-//end of brand-based switches
 
-// array of salesteam
-const requestedByArray = ["Blaine", "Sergio", "Peter", "Emile", "Georgio", "Tim","Tina", "Mohammed", "Khalid", "Wissam","Joe"];
-requestedByArray.forEach(name => {
-    requestedByArray.sort();
+// Array of sales team
+const requestedByArray = ["Blaine", "Sergio", "Peter", "Emile", "Georgio", "Tim", "Tina", "Mohammed", "Khalid", "Wissam", "Joe"];
+requestedByArray.sort().forEach(name => {
     const option = document.createElement('option');
     option.value = name;
     option.textContent = name;
     requestedBySelect.appendChild(option);
 });
 
-// array of brands
+// Array of brands
 const brandArray = ["AKRAPOVIC", "ALPINESTARS", "ARROW", "BAJA DESIGNS", "DAYTONA", "JOHN DOE", "KLIM", "KNOX", "LEATT", "QUAD LOCK", "RUKKA", "SP CONNECT", "WRS", "WUNDERLICH", "OTHER"];
 brandArray.forEach(brand => {
     const option = document.createElement('option');
@@ -121,8 +140,8 @@ brandArray.forEach(brand => {
     brandSelect.appendChild(option);
 });
 
-// sizes SML
-const sizeArray = ["3XS","2XS","XS", "Small", "Medium", "Large", "XL", "2XL", "3XL", "4XL", "5XL", "6XL"];
+// Sizes SML
+const sizeArray = ["3XS", "2XS", "XS", "Small", "Medium", "Large", "XL", "2XL", "3XL", "4XL", "5XL", "6XL"];
 sizeArray.forEach(size => {
     const option = document.createElement('option');
     option.value = size;
@@ -130,6 +149,7 @@ sizeArray.forEach(size => {
     sizeSMLSelect.appendChild(option);
 });
 
+// File upload handling
 let totalSize = 0;
 const maxFiles = 5;
 const maxSize = 100 * 1024 * 1024; // 100MB in bytes
@@ -223,36 +243,15 @@ fileInput.addEventListener('click', () => {
 });
 
 // When the file dialog is closed, restore the scroll position
-document.addEventListener('focus', function(e) {
+document.addEventListener('focus', function (e) {
     if (e.target === fileInput && scrollPosition !== undefined) {
         window.scrollTo(0, scrollPosition);
         scrollPosition = undefined; // Reset scrollPosition
     }
 }, true);
 
-// Function to manage required attributes based on visibility
-function updateRequiredFields(element) {
-    if (element.classList.contains('hidden')) {
-        Array.from(element.querySelectorAll('input, select, textarea')).forEach(field => {
-            if (!['receiptNumber', 'color', 'sizeOptionSML', 'sizeOptionNumbers'].includes(field.id)) {
-                field.removeAttribute('required');
-            }
-        });
-    } else {
-        Array.from(element.querySelectorAll('input, select, textarea')).forEach(field => {
-            if (!['receiptNumber', 'color', 'sizeOptionSML', 'sizeOptionNumbers'].includes(field.id) && 
-                !field.name.includes('recipient')) { // exclude switches
-                field.setAttribute('required', '');
-            }
-        });
-    }
-}
-
-// Update required fields for all initially hidden elements
-document.querySelectorAll('.hidden').forEach(e => updateRequiredFields(e));
-
-document.getElementById('dynamicForm').addEventListener('submit', async function(e) {
-    console.log('Form submission started')
+document.getElementById('dynamicForm').addEventListener('submit', async function (e) {
+    console.log('Form submission started');
     e.preventDefault();
     const submitButton = document.querySelector('button[type="submit"]');
     const loadingSpinner = document.querySelector('.loading-spinner');
@@ -279,18 +278,18 @@ document.getElementById('dynamicForm').addEventListener('submit', async function
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Success:', data);
-        alert('Form submitted successfully!');
-    })
-    .catch((error) => {
-        console.error('Error:', error);
-        alert('An error occurred while submitting the form.');
-    })
-    .finally(() => {
-        // Hide loading spinner and re-enable submit button
-        submitButton.classList.remove('submit-loading');
-        loadingSpinner.style.display = 'none';
-    });
+        .then(response => response.json())
+        .then(data => {
+            console.log('Success:', data);
+            alert('Form submitted successfully!');
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+            alert('An error occurred while submitting the form.');
+        })
+        .finally(() => {
+            // Hide loading spinner and re-enable submit button
+            submitButton.classList.remove('submit-loading');
+            loadingSpinner.style.display = 'none';
+        });
 });
