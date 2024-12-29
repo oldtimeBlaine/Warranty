@@ -1,6 +1,29 @@
 const recipientCheckboxes = document.querySelectorAll('input[name="recipient"]');
 const sizeCheckboxes = document.querySelectorAll('input[name="sizeOption"]');
 const replacementCheckboxes = document.querySelectorAll('input[name="replacementStatus"]');
+//added for dynamic required
+replacementCheckboxes.forEach(checkbox => {
+    checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+            // Make only the selected checkbox required
+            replacementCheckboxes.forEach(c => c.required = false);
+            checkbox.required = true;
+        } else {
+            // If no checkboxes are checked, reset the requirement
+            const anyChecked = Array.from(replacementCheckboxes).some(c => c.checked);
+            replacementCheckboxes.forEach(c => c.required = !anyChecked);
+        }
+    });
+});
+
+// Initialize to ensure one is required if none are checked
+const ensureReplacementRequired = () => {
+    const anyChecked = Array.from(replacementCheckboxes).some(c => c.checked);
+    replacementCheckboxes.forEach(c => c.required = !anyChecked);
+};
+
+// Call the initialization function on page load
+ensureReplacementRequired();
 const customerNameField = document.getElementById('customerNameField');
 const brandSelect = document.getElementById('brand');
 const poNumberField = document.getElementById('poNumberField');
@@ -34,7 +57,7 @@ function makeCheckboxesLikeRadios(checkboxes) {
 
 makeCheckboxesLikeRadios(recipientCheckboxes);
 makeCheckboxesLikeRadios(sizeCheckboxes);
-makeCheckboxesLikeRadios(replacementCheckboxes);
+makeCheckboxesLikeRadios(Checkboxes);
 //end of checkbox like radio
 
 // hide and view toggles
@@ -246,18 +269,18 @@ if (element.classList.contains('hidden')) {
 // Update required fields for all initially hidden elements
 document.querySelectorAll('.hidden').forEach(e => updateRequiredFields(e));
 
-// Manage required fields for dynamic elements
-//recipientCheckboxes.forEach(checkbox => {
-//checkbox.addEventListener('change', () => {
-//    if (document.getElementById('customer').checked) {
-//        customerNameField.classList.remove('hidden');
-//        updateRequiredFields(customerNameField);
-//    } else {
-//        customerNameField.classList.add('hidden');
-//        updateRequiredFields(customerNameField);
-//    }
-//});
-//});
+ Manage required fields for dynamic elements
+recipientCheckboxes.forEach(checkbox => {
+checkbox.addEventListener('change', () => {
+    if (document.getElementById('customer').checked) {
+        customerNameField.classList.remove('hidden');
+        updateRequiredFields(customerNameField);
+    } else {
+        customerNameField.classList.add('hidden');
+        updateRequiredFields(customerNameField);
+    }
+});
+});
 
 
 document.getElementById('dynamicForm').addEventListener('submit', async function(e) {
